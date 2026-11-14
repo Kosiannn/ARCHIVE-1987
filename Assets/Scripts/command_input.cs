@@ -1,35 +1,29 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class command_input : MonoBehaviour
 {
-    //TMP_InputFieldを取得するための変数
-    TMP_InputField inputField;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //TMP_InputFieldコンポーネントを取得
-        inputField = GameObject.Find("InputCommand").GetComponent<TMP_InputField>();
-    }
+    [SerializeField] TMP_InputField inputField;
+    [SerializeField] Command_Log commandLog;
 
     public void GetInputCommand()
     {
-        //TMP_InputFieldのテキストを取得
         string inputCommand = inputField.text;
 
-        //取得したテキストをコンソールに表示
-        Debug.Log(inputCommand);
+        if (string.IsNullOrWhiteSpace(inputCommand))
+            return;
 
-        //TMP_InputFieldのテキストをクリア
+        commandLog.AddLog("> " + inputCommand);
+
         inputField.text = "";
+        StartCoroutine(RefocusNextFrame());
     }
-    // Update is called once per frame
-    void Update()
+
+    IEnumerator RefocusNextFrame()
     {
-        
+        yield return null; // 1フレーム待つ
+        inputField.ActivateInputField();
     }
 }
